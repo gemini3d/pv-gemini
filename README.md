@@ -27,3 +27,4 @@ Interact()
 
 * ParaView Python API [reference](https://kitware.github.io/paraview-docs/latest/python/)
 * ParaView [Guide with examples](https://www.paraview.org/paraview-guide/)
+* Matlab can export data to VTK files via [vtkwrite](https://www.mathworks.com/matlabcentral/fileexchange/47814-vtkwrite-exports-various-2d-3d-data-to-paraview-in-vtk-file-format)
