@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
 """
 example of 3D scalar field
+
+If you get this error, ParaView doesn't know your data file format:
+TypeError: TestFileReadability argument %Id: %V
 """
-import mayavi.mlab as mlab
-import numpy as np
-import os
 
+from pathlib import Path
+import argparse
 
-def test_scalar_field():
-    # arbitrary grid
-    x, y, z = np.mgrid[-10:10:20j, -10:10:20j, -10:10:20j]  # type: ignore
+import paraview.simple as pvs
 
-    # fake data
-    s = np.sin(x * y * z) / (x * y * z)
+p = argparse.ArgumentParser()
+p.add_argument("fn", help="data file to load with paraview OpenDataFile()")
+P = p.parse_args()
 
-    scf = mlab.pipeline.scalar_field(x, y, z, s)
-    vol = mlab.pipeline.volume(scf)
-    mlab.colorbar(vol)
+fn = Path(P.fn).expanduser()
 
+if not fn.is_file():
+    raise FileNotFoundError(fn)
 
-if __name__ == "__main__":
-
-    test_scalar_field()
-
-    if not bool(os.environ.get("CI", False)):
-        mlab.show()
+pvs.OpenDataFile(fn)
