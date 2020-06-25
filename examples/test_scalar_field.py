@@ -20,4 +20,4 @@ fn = Path(P.fn).expanduser()
 if not fn.is_file():
     raise FileNotFoundError(fn)
 
-pvs.OpenDataFile(fn)
+pvs.OpenDataFile(str(fn))

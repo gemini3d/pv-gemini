@@ -10,7 +10,14 @@ comes with a Python 3.7 Conda environment.
 MacOS and Linux have only MPI ParaView downloads.
 Windows Gemini users are already using MS-MPI, so they should also use the Windows ParaView MPI installer.
 
-### Loading data
+### Load NetCDF
+
+ParaView expects
+[COARDS](http://wiki.seas.harvard.edu/geos-chem/index.php/The_COARDS_netCDF_conventions_for_earth_science_data)
+/ CF format NetCDF4 files.
+However, non-COARDS, non-CF single variable files can be loaded with the plain NetCDF filter.
+In the ParaView GUI, select "Volume" and the variable name to actually render the data.
+An animated camera path can be [created](https://www.paraview.org/Wiki/Advanced_Animations#Follow_Path).
 
 ParaView can load single-variable NetCDF4 files.
 To use a grid, which is particularly important for non-uniform gridded ionospheric data, store the NetCDF4 data with the grid data embedded in the file.
@@ -25,6 +32,27 @@ If your computer does not have a discrete GPU, using more than about 256 grid po
 If your computer has a discrete GPU, 1024 or more points per dimension may be possible, with proportionately slower rendering.
 
 A key feature of ParaView is that it gracefully degrades to render 3D output even on modest devices, as long as you don't select too large Sampling Dimensions.
+
+
+Many of the ParaView examples use `Show(); Render()`, which generates a frozen, non-interactive window.
+To make the 3D plot interactive, use `Interact()` like:
+
+```python
+from paraview.simple import *
+
+s = Sphere()
+Show()
+Interact()
+```
+
+### Render a video (YouTube-compatible)
+
+This animated path can be [saved as a movie](https://www.paraview.org/Wiki/Beginning_Pictures_and_Movies#Save_Animation_.28make_a_movie.29).
+Note that saving in .ogv format can use 99.5% less disk space than AVI.
+
+### Save ParaView state to .py
+
+If you make a workflow in the ParaView GUI interactively, this state can be rendered to Python .py code by File &rarr; Save State and selecting Python file type output.
 
 ### Am I using CPU or GPU
 
@@ -70,5 +98,3 @@ GPU Operation Mode
 * ParaView Python API [reference](https://kitware.github.io/paraview-docs/latest/python/)
 * ParaView [Guide with examples](https://www.paraview.org/paraview-guide/)
 * Matlab can export data to VTK files via [vtkwrite](https://www.mathworks.com/matlabcentral/fileexchange/47814-vtkwrite-exports-various-2d-3d-data-to-paraview-in-vtk-file-format)
-
-* Nvidia [GPU Tech Conference](https://www.nvidia.com/en-us/gtc/topics/high-performance-supercomputing/)

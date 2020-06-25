@@ -12,6 +12,9 @@ Traceback (most recent call last):
   File "C:\Program Files\ParaView 5.8.0-MPI-Windows-Python3.7-msvc2015-64bit\bin\Lib\site-packages\paraview\servermanager.py", line 3264, in <module>
     vtkProcessModule.PROCESS_CLIENT, pvoptions)
 TypeError: Initialize argument %Id: %V
+
+File formats ParaView can read:
+https://www.paraview.org/Wiki/ParaView/Users_Guide/List_of_readers
 """
 import os
 import sys
