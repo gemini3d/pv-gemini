@@ -100,8 +100,6 @@ and then rerun the installer.
 We use this script "build.ps1" from PowerShell in place of build.sh:
 
 ```posh
-# Required:
-
 $ErrorActionPreference = "Stop"
 
 Set-Location -Path $PSScriptRoot
