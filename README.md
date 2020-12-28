@@ -1,20 +1,21 @@
 # pv-gemini
 
 ParaView 3-D scientific visualization for Gemini.
-Two of the main ways to use Python for ParaView are via:
+Use [Python with ParaView](https://www.paraview.org/python/) via:
 
 * IPyParaview: Jupyter Notebook
 * PV-Python: Python environment installed with the usual standalone ParaView installer
 
 ## IPyParaView
 
-Setup a Python 3.7 (or whatever the current verson of ParaView standalone installer is using) conda environment:
+Setup a conda environment with the same version of Python as used by the ParaView installer.
+For example, ParaView 5.9 uses Python 3.8
 
 ```sh
-conda create -n pv37 python=3.7
-conda activate pv37
+conda create -n pv5.9 python=3.8
+conda activate pv5.9
 
-conda install ipython jupyter notebook jupyterlab traitlets
+conda install numpy ipython jupyter notebook jupyterlab traitlets
 ```
 
 ### get IPyParaView
@@ -23,81 +24,13 @@ conda install ipython jupyter notebook jupyterlab traitlets
 git clone https://github.com/nvidia/ipyparaview
 
 cd ipyparaview
+
+./build.sh  # Linux / MacOS
+
+./build.ps1  # Windows
 ```
 
-* Linux / MacOS: run "./build.sh"
-* Windows: run "./build.ps1" from PowerShell, noting workarounds in next section if you get an install OSError.
-
-### setup PYTHONPATH
-
-Create an environment variable pointing to ParaView's Python site-packages. The path will be like:
-
-* Windows: `PARAVIEW_PYTHONPATH=C:\Program Files\ParaView 5.8.0-MPI-Windows-Python3.7-msvc2015-64bit\bin\lib\site-packages\`
-* Linux: `PARAVIEW_PYTHONPATH=/opt/ParaView-5.8.0-MPI-Linux-Python3.7-64bit/bin/lib/site-packages/`
-
-We will use this enviroment variable PARAVIEW_PYTHONPATH when running IPyParaView.
-
-### Run examples
-
-The IPyParaView example use a few very widely used data science libraries also useful to geospace science.
-
-```sh
-conda install scikit-learn pandas matplotlib
-```
-
-
-#### Basic examples
-
-We use the environment variable PARAVIEW_PYTHONPATH to connect to ParaView's Python libraries.
-Before starting Jupyter, each time do:
-
-```sh
-conda activate pv37
-
-# Windows only
-$env:PYTHONPATH=$env:PARAVIEW_PYTHONPATH
-
-# Linux / MacOS only
-export PYTHONPATH=$PARAVIEW_PYTHONPATH
-```
-
-
-```sh
-cd notebooks
-
-jupyter
-```
-
-and use the web browser Jupyter Notebook that automatically opens to browse and run the examples.
-We suggest examples below, which do not require a discrete GPU (they run on a light laptop):
-
-* Hello_Jupyter-ParaView.ipynb
-* Iso-Surfaces_with_RTX.ipynb  "RTX" requires an appropriate GPU
-
-
-#### Advanced examples (not for beginning user)
-
-The example using `cuml` "UMAP MNIST Example.ipynb" requires a Linux system with GPU due to
-[cuml requirements](https://rapids.ai/start.html),
-which is for advanced users.
-cuml is a general machine learning GPU library unrelated to IPyParaView.
-
-Also the Dask example "Dask-MPI_Volume_Render" is for running on Dask-MPI HPC cluster, which would need to be setup by your IT staff perhaps.
-
-
-### Windows workaround for install
-
-At the moment, there can be a slight one-time install workaround for Windows because Python 3.8 is required to make os.symlink() work correctly.
-If you get an [OSError apply the Windows settings](https://www.scivision.dev/windows-symbolic-link-permission-enable/) to enable symlinks.
-You may need to create this "ipyparaview" symlink in the Command Prompt like (check that the directories are the same as on your Windows PC):
-
-```posh
-mklink /d %userprofile%\miniconda3\envs\py37\share\jupyter\nbextensions\ipyparaview %userprofile%\ipyparaview\ipyparaview\static
-```
-
-and then rerun the installer.
-
-We use this script "build.ps1" from PowerShell in place of build.sh:
+On Windows, we use this script "build.ps1" for Windows PowerShell in place of build.sh:
 
 ```posh
 $ErrorActionPreference = "Stop"
@@ -111,11 +44,64 @@ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 jupyter labextension install js
 ```
 
+### setup PYTHONPATH
+
+Create an **environment variable** `PARAVIEW_PYTHONPATH` pointing to ParaView's Python site-packages. The path will be like:
+
+* Windows: `C:\Program Files\ParaView 5.9.0-MPI-Windows-Python3.8-msvc2017-64bit\bin\lib\site-packages\`
+* Linux: `/opt/ParaView-5.9.0-MPI-Linux-Python3.8-64bit/bin/lib/site-packages/`
+
+Enviroment variable `PARAVIEW_PYTHONPATH` is necessary for running IPyParaView.
+
+## Examples
+
+IPyParaView examples need these popular Python libraries:
+
+```sh
+conda install scikit-learn pandas matplotlib
+```
+
+### Basic examples
+
+Environment variable PARAVIEW_PYTHONPATH points to ParaView's Python libraries.
+Before starting Jupyter to use IPyParaview, each time do:
+
+```sh
+conda activate pv5.9
+
+# Windows PowerShell
+$env:PYTHONPATH=$env:PARAVIEW_PYTHONPATH
+
+# Linux / MacOS
+export PYTHONPATH=$PARAVIEW_PYTHONPATH
+```
+
+```sh
+cd notebooks
+
+jupyter notebook
+```
+
+and use the web browser Jupyter Notebook that automatically opens to browse and run the examples.
+We suggest examples below, which do not require a discrete GPU (they run on a light laptop):
+
+* Hello_Jupyter-ParaView.ipynb
+* Iso-Surfaces_with_RTX.ipynb  "RTX" requires an appropriate GPU
+
+#### Advanced examples (not for beginning user)
+
+The example using `cuml` "UMAP MNIST Example.ipynb" requires a Linux system with GPU due to
+[cuml requirements](https://rapids.ai/start.html),
+which is for advanced users.
+cuml is a general machine learning GPU library unrelated to IPyParaView.
+
+Also the Dask example "Dask-MPI_Volume_Render" is for running on Dask-MPI HPC cluster, which would need to be setup by your IT staff perhaps.
+
 ## ParaView Python API
 
-ParaView 5.8
-[install](https://www.paraview.org/download/)
-comes with a Python 3.7 Conda environment.
+ParaView
+[installer ](https://www.paraview.org/download/)
+comes with a Python 3 Conda environment.
 MacOS and Linux have only MPI ParaView downloads.
 Windows Gemini users are already using MS-MPI, so they should also use the Windows ParaView MPI installer.
 
@@ -141,7 +127,6 @@ If your computer does not have a discrete GPU, using more than about 256 grid po
 If your computer has a discrete GPU, 1024 or more points per dimension may be possible, with proportionately slower rendering.
 
 A key feature of ParaView is that it gracefully degrades to render 3D output even on modest devices, as long as you don't select too large Sampling Dimensions.
-
 
 Many of the ParaView examples use `Show(); Render()`, which generates a frozen, non-interactive window.
 To make the 3D plot interactive, use `Interact()` like:
